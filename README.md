@@ -4,11 +4,6 @@ Welcome to the To-Do List Application! This project helps you manage your tasks 
 ![Screenshot 2025-01-14 134746](https://github.com/user-attachments/assets/a40b035c-edeb-428a-a0b0-17c1c8edfcb5)
 ![Screenshot 2025-01-14 134757](https://github.com/user-attachments/assets/e0314e3f-5c0d-408c-9c55-dacab5ae6683)
 
-
-# To-Do List Application
-
-Welcome to the To-Do List Application! This project helps you manage your tasks effectively with a clean and simple user interface.
-
 ---
 
 ## Features

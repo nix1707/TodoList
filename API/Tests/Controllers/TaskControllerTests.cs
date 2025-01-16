@@ -4,8 +4,8 @@ using API.Infrastructure;
 using API.Interfaces;
 using API.Models;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using Moq;
-using Tests.Helpers;
 
 namespace Tests.Controllers;
 
@@ -31,7 +31,17 @@ public class TasksControllerTests
             Priority = TaskPriority.Medium
         };
 
-        var expectedTask = TestHelper.CreateTestTask();
+        var expectedTask = new TaskItem
+        {
+            Id = ObjectId.GenerateNewId().ToString(),
+            Title = "Test Task",
+            Description = "Test Description",
+            CreatedAt = DateTime.Now,
+            Deadline = DateTime.Now.AddDays(1),
+            Priority = TaskPriority.Medium,
+            IsCompleted = false
+        };
+
         _mockRepository.Setup(repo => repo.CreateAsync(createDto))
             .ReturnsAsync(Result<TaskItem>.Success(expectedTask));
 
@@ -46,7 +56,19 @@ public class TasksControllerTests
     [Fact]
     public async Task GetAllTasks_ReturnsAllTasks()
     {
-        var expectedTasks = new List<TaskItem> { TestHelper.CreateTestTask() };
+        var testTask = new TaskItem
+        {
+            Id = ObjectId.GenerateNewId().ToString(),
+            Title = "Test Task",
+            Description = "Test Description",
+            CreatedAt = DateTime.Now,
+            Deadline = DateTime.Now.AddDays(1),
+            Priority = TaskPriority.Medium,
+            IsCompleted = false
+        };
+
+        var expectedTasks = new List<TaskItem> { testTask };
+
         _mockRepository.Setup(repo => repo.GetAllTasksAsync())
             .ReturnsAsync(Result<IEnumerable<TaskItem>>.Success(expectedTasks));
 
@@ -61,9 +83,9 @@ public class TasksControllerTests
     [Fact]
     public async Task DeleteTask_ExistingTask_ReturnsNoContent()
     {
-        var taskId = 1;
+        var taskId = ObjectId.GenerateNewId().ToString();
         _mockRepository.Setup(repo => repo.RemoveTaskAsync(taskId))
-            .ReturnsAsync(Result<int>.Success(taskId));
+            .ReturnsAsync(Result<string>.Success(taskId));
 
         var result = await _controller.DeleteTask(taskId);
 
@@ -74,18 +96,25 @@ public class TasksControllerTests
     [Fact]
     public async Task UpdateTask_ValidUpdate_ReturnsUpdatedTask()
     {
+        var taskId = ObjectId.GenerateNewId().ToString();
         var updateDto = new UpdateDto
         {
-            Id = 1,
+            Id = taskId,
             Title = "Updated Title",
             Description = "Updated Description",
             IsCompleted = true
         };
 
-        var updatedTask = TestHelper.CreateTestTask();
-        updatedTask.Title = updateDto.Title;
-        updatedTask.Description = updateDto.Description;
-        updatedTask.IsCompleted = updateDto.IsCompleted;
+        var updatedTask = new TaskItem
+        {
+            Id = taskId,
+            Title = updateDto.Title,
+            Description = updateDto.Description,
+            IsCompleted = updateDto.IsCompleted,
+            CreatedAt = DateTime.Now,
+            Deadline = DateTime.Now.AddDays(1),
+            Priority = TaskPriority.Medium
+        };
 
         _mockRepository.Setup(repo => repo.UpdateAsync(updateDto))
             .ReturnsAsync(Result<TaskItem>.Success(updatedTask));
@@ -96,5 +125,6 @@ public class TasksControllerTests
         var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
         var returnedTask = Assert.IsType<TaskItem>(okResult.Value);
         Assert.Equal(updateDto.Title, returnedTask.Title);
+        Assert.Equal(taskId, returnedTask.Id);
     }
 }

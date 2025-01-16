@@ -28,7 +28,7 @@ public class TasksController(ITaskRepository repository) : BaseApiController
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTask(int id)
+    public async Task<IActionResult> DeleteTask(string id)
     {
         return HandleResult(await _repository.RemoveTaskAsync(id));
     }

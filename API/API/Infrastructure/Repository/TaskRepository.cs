@@ -3,6 +3,8 @@ using API.DTOs.Tasks;
 using API.Interfaces;
 using API.Models;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace API.Infrastructure.Repository;
 
@@ -14,6 +16,7 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
     {
         var taskItem = new TaskItem
         {
+            Id = ObjectId.GenerateNewId().ToString(),
             Title = create.Title,
             Description = create.Description,
             CreatedAt = DateTime.Now,
@@ -38,7 +41,7 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
         return Result<IEnumerable<TaskItem>>.Success(tasks);
     }
 
-    public async Task<Result<int>> RemoveTaskAsync(int taskId)
+    public async Task<Result<string>> RemoveTaskAsync(string taskId)
     {
         var taskItem = await _context.TaskItems.FirstOrDefaultAsync(i => i.Id == taskId);
 
@@ -48,9 +51,9 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
 
         var success = await _context.SaveChangesAsync() > 0;
 
-        if (success) return Result<int>.Success(taskId);
+        if (success) return Result<string>.Success(taskId);
 
-        return Result<int>.Failure("Failed to remove Task");
+        return Result<string>.Failure("Failed to remove Task");
 
     }
 

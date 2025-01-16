@@ -1,7 +1,6 @@
-using API.Database;
 using API.Infrastructure.Repository;
 using API.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +16,7 @@ builder.Services.AddCors(opt =>
     });
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddMongoDbContext(builder.Configuration);
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddControllers();
 

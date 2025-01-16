@@ -1,19 +1,17 @@
-﻿using API.Database;
-using API.DTOs.Tasks;
+﻿using API.DTOs.Tasks;
 using API.Infrastructure.Repository;
 using API.Models;
+using Microsoft.EntityFrameworkCore;
 using Tests.Helpers;
 
 namespace Tests.Repositories;
 
-public class TaskRepositoryTests : IDisposable
+public class TaskRepositoryTests : TestBase
 {
-    private readonly AppDbContext _context;
     private readonly TaskRepository _repository;
 
     public TaskRepositoryTests()
     {
-        _context = TestHelper.CreateTestDbContext();
         _repository = new TaskRepository(_context);
     }
 
@@ -29,9 +27,13 @@ public class TaskRepositoryTests : IDisposable
         };
 
         var result = await _repository.CreateAsync(createDto);
+
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value);
         Assert.Equal(createDto.Title, result.Value.Title);
+
+        var savedTask = await _context.TaskItems.FindAsync(result.Value.Id);
+        Assert.NotNull(savedTask);
     }
 
     [Fact]
@@ -45,6 +47,9 @@ public class TaskRepositoryTests : IDisposable
 
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
+
+        var count = await _context.TaskItems.CountAsync();
+        Assert.Equal(1, count);
     }
 
     [Fact]
@@ -58,6 +63,9 @@ public class TaskRepositoryTests : IDisposable
 
         Assert.True(result.IsSuccess);
         Assert.Equal(testTask.Id, result.Value);
+
+        var deletedTask = await _context.TaskItems.FindAsync(testTask.Id);
+        Assert.Null(deletedTask);
     }
 
     [Fact]
@@ -83,11 +91,9 @@ public class TaskRepositoryTests : IDisposable
         Assert.Equal(updateDto.Description, result.Value.Description);
         Assert.Equal(updateDto.Priority, result.Value.Priority);
         Assert.True(result.Value.IsCompleted);
-    }
 
-    public void Dispose()
-    {
-        _context.Database.EnsureDeleted();
-        _context.Dispose();
+        var updatedTask = await _context.TaskItems.FindAsync(testTask.Id);
+        Assert.NotNull(updatedTask);
+        Assert.Equal(updateDto.Title, updatedTask.Title);
     }
 }

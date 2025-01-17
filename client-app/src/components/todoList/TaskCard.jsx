@@ -50,12 +50,7 @@ const TaskCard = ({ task }) => {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() =>
-                    setEditingTask({
-                      ...task,
-                      priority: getPriorityColor(task.priority),
-                    })
-                  }
+                  onClick={() => setEditingTask(task)}
                   className="p-1 hover:bg-gray-100 rounded-lg focus:outline-none"
                 >
                   <Edit2 className="h-4 w-4" />

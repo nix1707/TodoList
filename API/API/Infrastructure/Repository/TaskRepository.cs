@@ -5,6 +5,7 @@ using API.Models;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Text.Json;
 
 namespace API.Infrastructure.Repository;
 

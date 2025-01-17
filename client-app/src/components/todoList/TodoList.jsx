@@ -31,7 +31,11 @@ const TodoList = () => {
           ) : (
             <div className="h-full flex flex-col items-center justify-center">
               <div className="flex flex-col items-center justify-center">
-                <img src="/no-tasks.png" draggable="false" className="select-none md:w-10/12 w-1/2" />
+                <img
+                  src="/no-tasks.png"
+                  draggable="false"
+                  className="select-none md:w-10/12 w-1/2"
+                />
               </div>
             </div>
           )}

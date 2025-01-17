@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/ui/Navbar";
 import TodoList from "./components/todoList/TodoList";
-import AddTaskForm from "./components/AddTaskForm";
+import AddTaskForm from "./components/ui/AddTaskForm";
 
 function App() {
   return (

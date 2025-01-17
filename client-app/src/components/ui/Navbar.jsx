@@ -1,6 +1,6 @@
 import { Grid, Layout, Search } from "lucide-react";
 import React from "react";
-import { useTaskStore } from "../state/useTaskStore";
+import { useTaskStore } from "../../state/useTaskStore";
 
 const Navbar = () => {
   const {

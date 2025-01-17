@@ -3,11 +3,9 @@ import axios from "axios";
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 const Tasks = {
-  createTask: (title, description, deadline, priority) =>
-    axios.post("/tasks", { title, description,deadline, priority }),
+  createTask: (task) => axios.post("/tasks", task),
   getAllTasks: () => axios.get("/tasks"),
-  updateTask: (newTask) =>
-    axios.put(`/tasks`, newTask),
+  updateTask: async (task) => axios.put(`/tasks`, task),
   deleteTask: (id) => axios.delete(`/tasks/${id}`),
 };
 

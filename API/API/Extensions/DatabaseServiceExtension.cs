@@ -13,7 +13,7 @@ public static class DatabaseServiceExtension
         var databaseName = configSection["DatabaseName"];
 
         services.AddDbContext<AppDbContext>(options =>
-            options.UseMongoDB(new MongoClient(connectionString), databaseName)
+             options.UseMongoDB(new MongoClient(connectionString), databaseName)
         );
 
         return services;
